@@ -1,0 +1,58 @@
+---
+- hosts: all
+  become: true
+
+  vars_files:
+    - vars/vars.yml
+
+  pre_tasks:
+    - name: Update apt cache
+      apt: update_cache=yes cache_valid_time=3600
+  
+  handlers:
+    - name: restart apache
+      service: name=apache2 state=restarted
+
+    - name: Reload Apache
+      service: name=apache2 state=reloaded  
+
+  tasks:
+    - name: install apache
+      apt: name=apache2 state=latest
+ 
+    - name: Create document root
+      file:
+        path: "/var/www/{{ domain }}"      
+        state: directory
+        owner: ubuntu
+        mode: '0755'
+
+    - name: copy index page
+      template:
+        src: "templates/index.html.j2"
+        dest: "/var/www/{{ domain }}/index.html"
+
+    - name: Set up Apache virtualhost
+      template:
+        src: "templates/apache.conf.j2"
+        dest: "/etc/apache2/sites-available/{{ domain }}.test.conf"
+
+    - name: Enable new site
+      shell: /usr/sbin/a2ensite {{ domain }}.test.conf
+      notify: Reload Apache
+
+    - name: Disable default Apache site
+      shell: /usr/sbin/a2dissite 000-default.conf
+      when: disable_default
+      notify: Reload Apache
+
+    - name: "UFW - Allow HTTP on port {{ http_port }}"
+      ufw:
+        rule: allow
+        port: "{{ http_port }}"
+        proto: tcp
+
+
+
+
+

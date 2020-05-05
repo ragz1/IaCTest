@@ -1,0 +1,8 @@
+---
+# http port
+ http_port: "80"
+
+ # domain name
+ domain: "iactest"
+ disable_default: true
+
