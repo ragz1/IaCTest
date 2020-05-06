@@ -5,4 +5,4 @@
  # domain name
  domain: "iactest"
  disable_default: true
-
+ host_ip: 13.59.173.134
