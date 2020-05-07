@@ -1,6 +1,6 @@
-aws_access_key = "AKIAJZ546NKLGED53WPA"
+aws_access_key = ""
 
-aws_secret_key = "2pb6hWB+VPcFWxfTUBhF9K3ydPtEFJWx44DqLZ/B"
+aws_secret_key = ""
 
 key_name = "ansibleKey"
 
